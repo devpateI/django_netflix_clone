@@ -1,37 +1,43 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
+
 AGE_CHOICES = (
     ('All', 'All'),
-    ('Kids', 'Kids'),
+    ('Kids', 'Kids')
 )
-MOVIE_CHOICES = (
-    ('Seasonal', 'Seasonal'),
-    ('Single', 'Single')
+
+MOVIE_TYPE = (
+    ('single', 'Single'),
+    ('seasonal', 'Seasonal')
 )
 
 
 class CustomUser(AbstractUser):
-    profiles = models.ManyToManyField('profile', blank=True)
+    profiles = models.ManyToManyField('Profile')
 
 
 class Profile(models.Model):
-    name = models.CharField(max_length=255)
-    age_limit = models.CharField(max_length=10, choices=AGE_CHOICES)
-    uuid = models.UUIDField(default=uuid.uuid4)
+    name = models.CharField(max_length=225)
+    age_limit = models.CharField(max_length=5, choices=AGE_CHOICES)
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    def __str__(self):
+        return self.name + " "+self.age_limit
 
 
 class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+    title: str = models.CharField(max_length=225)
+    description: str = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
-    uuid = models.UUIDField(default=uuid.uuid4)
-    type = models.CharField(max_length=10, choices=MOVIE_CHOICES)
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+    type = models.CharField(max_length=10, choices=MOVIE_TYPE)
     videos = models.ManyToManyField('Video')
-    flyer = models.ImageField(upload_to='flyers')
-    age_limit = models.CharField(max_length=10, choices=AGE_CHOICES)
+    flyer = models.ImageField(upload_to='flyers', blank=True, null=True)
+    age_limit = models.CharField(
+        max_length=5, choices=AGE_CHOICES, blank=True, null=True)
 
 
 class Video(models.Model):
-    title = models.CharField(max_length=255, blank=True, null=True)
-    models.files = models.FileField(upload_to='movies')
+    title: str = models.CharField(max_length=225, blank=True, null=True)
+    file = models.FileField(upload_to='movies')
