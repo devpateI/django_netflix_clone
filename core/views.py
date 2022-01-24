@@ -19,9 +19,6 @@ class ProfileList(View):
     def get(self, request, *args, **kwargs):
 
         profiles = request.user.profiles.all()
-
-        print(profiles)
-
         return render(request, 'profileList.html', {
             'profiles': profiles
         })
@@ -40,7 +37,6 @@ class ProfileCreate(View):
         form = ProfileForm(request.POST or None)
 
         if form.is_valid():
-            print(form.cleaned_data)
             profile = Profile.objects.create(**form.cleaned_data)
             if profile:
                 request.user.profiles.add(profile)
