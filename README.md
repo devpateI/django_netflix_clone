@@ -10,4 +10,3 @@ There are 2 users
 Admin have all the rights 
 He can add/remove movies,series
 User can only watch the content uploaded by admin 
-and files are stored in media folder
